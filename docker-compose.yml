@@ -1,0 +1,29 @@
+version: '3'
+services:
+
+    web:
+        build:
+            context: .
+        ports: 
+            - "${JAVA_PORT}:8080"
+        container_name: Java_Web
+        volumes:
+            - ./conf/manager.xml:/usr/local/apache-tomcat-8.5.43/conf/Catalina/localhost/manager.xml
+            - ./conf/tomcat-users.xml:/usr/local/apache-tomcat-8.5.43/conf/tomcat-users.xml
+            - ./conf/server.xml:/usr/local/apache-tomcat-8.5.43/conf/server.xml
+        restart: always
+    
+    mysql:
+        image: mysql:${MYSQL_VERSION}
+        container_name: Java_Mysql
+        ports:
+          - "${MYSQL_PORT}:3306"
+        volumes:
+          - ${MYSQL_DATA}:/var/lib/mysql
+        environment:
+          TZ: ${MYSQL_TZ}
+          MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASS}
+          MYSQL_DATABASE: ${MYSQL_DB}
+          MYSQL_USER: ${MYSQL_USERNAME}
+          MYSQL_PASSWORD: ${MYSQL_USERPASS}
+        restart: always
